@@ -19,16 +19,35 @@ body {
 
 .task-input {
     background-color: #9c9c9c;
-    height: 10vh;
     margin: auto;
     margin-top: 15px;
+    padding: 30px;
     width: 80%;
     border-radius: 15px;
 }
 
+.inputs-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.input {
+  margin: 15px;
+}
+
+.submit-btn {
+  margin: auto;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
 .tasks {
-  margin: 0;
+  margin: auto;
   padding: 0;
+  width: 85%;
 }
 
 .task {
@@ -36,4 +55,10 @@ body {
   height: auto;
   border-radius: 15px;
   margin: 15px;
+  display: grid;
+  grid-template-columns: 4fr 1fr 1fr;
+}
+
+.red {
+  background-color: rgb(239, 183, 183);
 }

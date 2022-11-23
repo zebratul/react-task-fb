@@ -3,6 +3,7 @@ import { generateId, getNewExpirationTime } from './utilities';
 
 export function AddTaskForm(props) {
   const [selectedFile, setSelectedFile] = useState();
+  const [attachment, setAttachment] = useState(false);
   const [headline, setHeadline] = useState("");
   const [text, setText] = useState("");
   const [date, setDate] = useState("");
@@ -14,7 +15,7 @@ export function AddTaskForm(props) {
 
   const handleTextChange = ({ target }) => {
     const { name, value } = target;
-      setText (value);
+    setText (value);
   };
   
   const handleDateChange = ({ target }) => {
@@ -25,6 +26,7 @@ export function AddTaskForm(props) {
   const handleFileChange = ({ target }) => {
     const { name, value } = target;
     setSelectedFile (value);
+    setAttachment(true);
   };
 
   const handleSubmit = (event) => {
@@ -36,47 +38,56 @@ export function AddTaskForm(props) {
       date: date,
     };
     if (text.length > 0) {
-      props.addTask(newTask);
+      props.addTask(generateId(), headline, text, date, attachment);
       setText("");
+      setHeadline("");
     }
   }
 
   return (
     <div className="task-input"> 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="form">
+            <div className="inputs-container">
             <input
+                className="input"
                 value={headline}
                 onChange={handleHeadlineChange}
                 type="text"
-                aria-label="Please name the task"
                 placeholder="Please name the task"
             />
             
             <input
+                className="input"
                 value={text}
                 onChange={handleTextChange}
                 type="text"
-                aria-label="describe the task"
-                placeholder="describe the task"
+                placeholder="Describe the task"
             />
 
+            <label>
+            Select the task completion date 
             <input
+                className="input"
                 value={date}
                 onChange={handleDateChange}
                 type="date"
-                aria-label="please select completion date"
-                placeholder="please select completion date"
             />
+            </label>
 
+            <label>
+            Choose a file to upload
             <input
+                className="input"
                 value={selectedFile}
                 onChange={handleFileChange}
                 type="file"
-                aria-label="optionally, upload a file"
-                placeholder="optionally, upload a file"
             />
+            </label>
+            </div>
 
-            <input type="submit" value="Add" />
+            <div className='submit-btn'>
+              <input type="submit" value="Add task" />
+            </div>
         </form>
     </div>
   );

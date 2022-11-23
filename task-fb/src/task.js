@@ -1,31 +1,36 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+const dayjs = require('dayjs')
 
 export function Task(props) {
   const { task, removeTask, completeTask } = props;
+
+  const checkDate = () => {
+    const today = dayjs(new Date());
+    const taskDate = dayjs(task.date);
+    if (!today.isBefore(taskDate)) {
+      return "red";
+    }
+  };
 
   const handleRemoveClick = () => {
     removeTask(task.id);
   };
 
-//   useEffect(() => {
-//     const timeRemaining = thought.expiresAt - Date.now();
-//     const timer = setTimeout(() => {
-//       removeThought(thought.id)
-//     }, timeRemaining);
-//     return () => clearTimeout(timer);
-//   }, [thought]);
-  
-
   return (
     <li className="task">
-      <button
+      <div className="title"><b>{task.title}</b></div>
+      <div className={"date " + checkDate()}>{task.date}</div>
+      <div>remove task: <button
         aria-label="Remove task"
         className="remove-button"
         onClick={handleRemoveClick}
-      >
+        >
         &times;
-      </button>
-      <div className="text">{task.headline} desc: {task.text} exp.date: {task.date}</div>
+        </button>
+      </div>
+      <div className="text">{task.text} </div>
+      <div className="attach">{task.attachment ? "link" : ""}</div>
+      <div className="complete">completion: <input type="checkbox"/></div>
     </li>
   );
 }

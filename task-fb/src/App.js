@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue, remove} from "firebase/database";
 import React, { useState, useEffect  } from 'react';
 import ReactDOM from 'react-dom';
 import { AddTaskForm } from './addTaskForm';
@@ -23,44 +23,41 @@ function App() {
   const database = getDatabase(app);
 
   useEffect(() => { //fetching live taskslist from firebase DB
+    console.log(tasks);
     const tasksRef = ref(database, 'tasks/');
     onValue(tasksRef, (snapshot) => {
       const data = snapshot.val();
       console.log(data);
+      console.log(Object.entries(data));
       setTasks(data);
    });
   }, []); // run it once
 
-  function writeUserData(taskId, headline, desc, attachment) {
+  function addTask(taskId, title, text, date, attachment) {
     set(ref(database, 'tasks/' + taskId), {
-      headline: headline,
-      description: desc,
-      attachment : attachment
+      id: taskId,
+      title: title,
+      text: text,
+      date: date, 
+      attachment: attachment,
+      complete: false
     });
   }
 
-  const addTask = (task) => {
-    setTasks ((prev) => ([
-      ...prev,
-      task
-    ]));
-  }
-
-  const removeTask = (tasktIdToRemove) => {
-    const filtered = tasks.filter(task => task.id !== tasktIdToRemove)
-    setTasks(filtered);
+  function removeTask(taskId) {
+    remove(ref(database, 'tasks/' + taskId));
   }
   
   return (
     <div className="App">
       <header className="task-header">
-          This is header for the task app
+          This is header for the task app <br/>
       </header>
       <main>
         <AddTaskForm addTask={addTask}/>
         <ul className="tasks">
-          {tasks.map((task) => (
-            <Task key={task.id} task={task} removeTask={removeTask}/>
+          {tasks==0 ? "loading..." : Object.entries(tasks).map((task) => (
+          <Task key={task[0]} task={task[1]} removeTask={removeTask}/>
           ))}
         </ul>
       </main>
@@ -68,5 +65,6 @@ function App() {
 
   );
 }
+
 
 export default App;

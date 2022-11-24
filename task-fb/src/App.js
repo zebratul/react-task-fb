@@ -1,13 +1,16 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, onValue, remove} from "firebase/database";
+import { getDatabase, ref, set, onValue, remove, update} from "firebase/database";
 import React, { useState, useEffect  } from 'react';
 import ReactDOM from 'react-dom';
 import { AddTaskForm } from './addTaskForm';
 import { Task } from './task';
+import { Modal } from "./Modal";
 import { generateId, getNewExpirationTime } from './utilities';
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState([]);
 
   const firebaseConfig = {
     apiKey: "AIzaSyCtBuVLyKIbqAAE4DjFIoldQrlkjy9kYU0",
@@ -42,22 +45,38 @@ function App() {
       attachment: attachment,
       complete: false
     });
+    setIsOpen(false);
   }
 
   function removeTask(taskId) {
     remove(ref(database, 'tasks/' + taskId));
   }
   
+  function completeTask(taskId, status) {
+    const statusUpdate = {complete : status};
+    update(ref(database, 'tasks/' + taskId), statusUpdate);
+  }
+
+  function editTask(taskId) {
+    console.log(taskId);
+    const target = Object.entries(tasks).filter(el => el[0] === taskId.toString());
+    setTaskToEdit(target[0]);
+    if (taskToEdit.length !== 0 ) {
+      setIsOpen(true)
+    }
+  }
+
   return (
     <div className="App">
       <header className="task-header">
-          This is header for the task app <br/>
+          This is a header for the task app <br/>
+          {isOpen && <Modal setIsOpen={setIsOpen} taskId={taskToEdit[0]} task={taskToEdit[1]} addTask={addTask}/>}
       </header>
       <main>
-        <AddTaskForm addTask={addTask}/>
+        <AddTaskForm addTask={addTask} editTask={editTask} task={{}} taskId={generateId()}/>
         <ul className="tasks">
           {tasks==0 ? "loading..." : Object.entries(tasks).map((task) => (
-          <Task key={task[0]} task={task[1]} removeTask={removeTask}/>
+          <Task key={task[0]} task={task[1]} removeTask={removeTask} completeTask={completeTask} editTask={editTask}/>
           ))}
         </ul>
       </main>

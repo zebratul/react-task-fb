@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { generateId, getNewExpirationTime } from './utilities';
+import { PickerOverlay, PickerInline  } from 'filestack-react';
 
 export function AddTaskForm(props) {
+  const { task, taskId } = props;
   const [selectedFile, setSelectedFile] = useState();
   const [attachment, setAttachment] = useState(false);
-  const [headline, setHeadline] = useState("");
-  const [text, setText] = useState("");
-  const [date, setDate] = useState("");
+  const [headline, setHeadline] = useState(task.title);
+  const [text, setText] = useState(task.text);
+  const [date, setDate] = useState(task.date);
   
   const handleHeadlineChange = ({ target }) => {
     const { name, value } = target;
@@ -31,14 +33,13 @@ export function AddTaskForm(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    let newTask = {
-      id: generateId(),
-      headline: headline,
-      text: text,
-      date: date,
-    };
+    // if (taskId === 0 ){
+    //   let newTaskId = generateId();
+    //   setIdCreate(newTaskId);
+    // }  
+    // setIdCreate(taskId);    
     if (text.length > 0) {
-      props.addTask(generateId(), headline, text, date, attachment);
+      props.addTask(taskId, headline, text, date, attachment);
       setText("");
       setHeadline("");
     }
@@ -83,6 +84,7 @@ export function AddTaskForm(props) {
                 type="file"
             />
             </label>
+
             </div>
 
             <div className='submit-btn'>

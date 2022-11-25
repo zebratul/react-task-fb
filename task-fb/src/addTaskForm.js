@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { generateId, getNewExpirationTime } from './utilities';
-import { PickerOverlay, PickerInline  } from 'filestack-react';
 
+/**
+* This is the task creation form component.
+* It stores user inputs in states, and uses that data to upload it using addTask function provided in props from app.
+* @return - Returns and renders task creation component. 
+*/
 export function AddTaskForm(props) {
   const { task, taskId } = props;
   const [selectedFile, setSelectedFile] = useState();
@@ -31,13 +34,11 @@ export function AddTaskForm(props) {
     setAttachment(true);
   };
 
+  /**
+  * After user submits the form, the components calls addTask function to store the data in backend, and clear the fields.
+  */
   const handleSubmit = (event) => {
     event.preventDefault();
-    // if (taskId === 0 ){
-    //   let newTaskId = generateId();
-    //   setIdCreate(newTaskId);
-    // }  
-    // setIdCreate(taskId);    
     if (text.length > 0) {
       props.addTask(taskId, headline, text, date, attachment);
       setText("");
@@ -62,7 +63,7 @@ export function AddTaskForm(props) {
                 value={text}
                 onChange={handleTextChange}
                 type="text"
-                placeholder="Describe the task"
+                placeholder="Describe the task details"
             />
 
             <label>

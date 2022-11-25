@@ -32,6 +32,26 @@ function App() {
   const database = getDatabase(app);
 
   /**
+  * This is a file upload function. However due to CORS rules file upload doesn't work ATM.
+  */
+  // function fileUpload(file) {
+  //   const options = {
+  //     method: 'POST',
+  //     headers: {
+  //       'content-type': 'application/octet-stream',
+  //       'X-RapidAPI-Key': 'c5745c51b8msh85b34c461ea45b0p183024jsnc9ae8b43a936',
+  //       'X-RapidAPI-Host': 'pastin1.p.rapidapi.com'
+  //     },
+  //     body: file
+  //   };
+  //   console.log(options);
+  //   fetch('https://pastin1.p.rapidapi.com/upload', options)
+  //     .then(response => response.json())
+  //     .then(response => console.log(response))
+  //     .catch(err => console.error(err));
+  // }
+
+  /**
   * Fetching live taskslist from firebase DB, and saving it in tasks state.
   */
   useEffect(() => { 
@@ -51,7 +71,7 @@ function App() {
   * @param {string} date - Completion date for the task.
   * @param {boolean} attachment - Shows if the task has an attached file. Defaults to false as no attachments are uploaded ATM
   */
-  function addTask(taskId, title, text, date, attachment) {
+  function addTask(taskId, title, text, date, attachment, selectedFile) {
     set(ref(database, 'tasks/' + taskId), {
       id: taskId,
       title: title,
@@ -61,6 +81,7 @@ function App() {
       complete: false
     });
     setIsOpen(false);
+    // fileUpload(selectedFile);
   }
 
     /**

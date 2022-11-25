@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 */
 export function AddTaskForm(props) {
   const { task, taskId } = props;
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState("");
   const [attachment, setAttachment] = useState(false);
   const [headline, setHeadline] = useState(task.title);
   const [text, setText] = useState(task.text);
@@ -27,12 +27,11 @@ export function AddTaskForm(props) {
     const { name, value } = target;
     setDate (value);
   };
-  
-  const handleFileChange = ({ target }) => {
-    const { name, value } = target;
-    setSelectedFile (value);
+
+  const handleFileChange = (event) => {
+    setSelectedFile (event.target.files[0]);
     setAttachment(true);
-  };
+  }
 
   /**
   * After user submits the form, the components calls addTask function to store the data in backend, and clear the fields.
@@ -40,7 +39,7 @@ export function AddTaskForm(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (text.length > 0) {
-      props.addTask(taskId, headline, text, date, attachment);
+      props.addTask(taskId, headline, text, date, attachment, selectedFile);
       setText("");
       setHeadline("");
     }
@@ -80,7 +79,6 @@ export function AddTaskForm(props) {
             Choose a file to upload
             <input
                 className="input"
-                value={selectedFile}
                 onChange={handleFileChange}
                 type="file"
             />
